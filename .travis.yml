@@ -18,3 +18,8 @@ notifications:
       - himax1982@gmail.com
     on_success: never # default: change
     on_failure: always # default: always
+env:
+
+  global:
+
+    - CODECOV_TOKEN='0b910580-36c3-4f66-b7d4-51031df4b554'
