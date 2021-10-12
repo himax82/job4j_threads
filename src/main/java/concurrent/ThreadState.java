@@ -6,12 +6,16 @@ public class ThreadState {
                 () -> System.out.println(Thread.currentThread().getName())
         );
         first.start();
-        first.join();
         Thread second = new Thread(
                 () -> System.out.println(Thread.currentThread().getName())
         );
         second.start();
-        second.join();
+        while (first.getState() != Thread.State.TERMINATED) {
+            System.out.println("Work first!");
+        }
+        while (second.getState() != Thread.State.TERMINATED) {
+            System.out.println("Work second!");
+        }
         System.out.println("Work the end!");
     }
 }
