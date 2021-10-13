@@ -4,9 +4,12 @@ import java.io.BufferedInputStream;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.net.URL;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 public class Wget implements Runnable {
 
+    public static final String URL_REGEX = "^((https?|ftp)://|(www|ftp)\\.)?[a-z0-9-]+(\\.[a-z0-9-]+)+([/?].*)?$";
     private final String url;
     private final int speed;
 
@@ -40,11 +43,30 @@ public class Wget implements Runnable {
         }
     }
 
+    public static boolean validateArgs(String[] args) {
+        boolean url;
+        boolean in;
+        Pattern p = Pattern.compile(URL_REGEX);
+        Matcher m = p.matcher(args[0]);
+        url = m.find();
+        try {
+            Integer.parseInt(args[1]);
+            in = true;
+        } catch (NumberFormatException e) {
+            in = false;
+        }
+        return url && in;
+    }
+
     public static void main(String[] args) throws InterruptedException {
+        if (validateArgs(args)) {
         String url = args[0];
         int speed = Integer.parseInt(args[1]);
         Thread wget = new Thread(new Wget(url, speed));
-        wget.start();
-        wget.join();
+            wget.start();
+            wget.join();
+        } else {
+            throw new IllegalArgumentException("Аргументы введенны не верно!");
+        }
     }
 }
