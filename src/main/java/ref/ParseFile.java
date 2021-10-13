@@ -3,10 +3,13 @@ package ref;
 import java.io.*;
 import java.util.function.Predicate;
 
-public class ParseFile {
+public final class ParseFile {
+
+    public static final Predicate<Integer> CONTENT  = integer -> integer > 0;
+    public static final Predicate<Integer> CONTENTWITHOUTUNICODE  = integer -> integer < 0x80;
     private final File file;
 
-    public ParseFile(File file) {
+    public ParseFile(final File file) {
         this.file = file;
     }
 
@@ -26,12 +29,5 @@ public class ParseFile {
            e.printStackTrace();
        }
         return result;
-    }
-
-    public void saveContent(String content) throws IOException {
-        OutputStream o = new FileOutputStream(file);
-        for (int i = 0; i < content.length(); i += 1) {
-            o.write(content.charAt(i));
-        }
     }
 }

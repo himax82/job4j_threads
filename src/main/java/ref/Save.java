@@ -2,7 +2,7 @@ package ref;
 
 import java.io.*;
 
-public class Save {
+public final class Save {
 
     public static void saveContent(File file, String content) {
         try (OutputStream o = new FileOutputStream(file);
