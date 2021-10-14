@@ -5,15 +5,13 @@ import java.util.function.Predicate;
 
 public final class ParseFile {
 
-    public static final Predicate<Integer> CONTENT  = integer -> integer > 0;
-    public static final Predicate<Integer> CONTENTWITHOUTUNICODE  = integer -> integer < 0x80;
     private final File file;
 
     public ParseFile(final File file) {
         this.file = file;
     }
 
-    public String getContent(Predicate<Integer> filter) {
+    private String getContent(Predicate<Integer> filter) {
         String result = "";
        try (InputStream i = new FileInputStream(file);
        BufferedInputStream bufferedInputStream = new BufferedInputStream(i)) {
@@ -29,5 +27,13 @@ public final class ParseFile {
            e.printStackTrace();
        }
         return result;
+    }
+
+    public String getAllContent() {
+       return getContent(integer -> integer > 0);
+    }
+
+    public String getContentWithoutUnicode() {
+        return getContent(integer -> integer > 0x88);
     }
 }
