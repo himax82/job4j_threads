@@ -18,8 +18,7 @@ public class SingleLockList<T> implements Iterable<T>, Cloneable {
     }
 
     public synchronized void add(T value) {
-        T copy = value;
-        list.add(copy);
+        list.add(value);
     }
 
     public synchronized T get(int index) {
