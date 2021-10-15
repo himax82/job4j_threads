@@ -1,5 +1,6 @@
 package cas;
 
+import org.junit.Ignore;
 import org.junit.Test;
 
 import java.util.stream.IntStream;
@@ -9,6 +10,7 @@ import static org.junit.Assert.*;
 
 public class CASCountTest {
 
+    @Ignore
     @Test
     public void when200incrTwoThreads() {
         CASCount count = new CASCount();
