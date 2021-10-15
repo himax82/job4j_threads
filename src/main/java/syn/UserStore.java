@@ -3,9 +3,6 @@ package syn;
 import net.jcip.annotations.GuardedBy;
 import net.jcip.annotations.ThreadSafe;
 
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
 
@@ -31,7 +28,7 @@ public class UserStore {
         User f = users.get(fromId);
         User t = users.get(toId);
         int balance = f.getAmount() - amount;
-        if (f != null && t != null && balance > 0) {
+        if (f != null && t != null && balance >= 0) {
                 f.setAmount(balance);
                 t.setAmount(t.getAmount() + amount);
                 users.replace(fromId, f);
