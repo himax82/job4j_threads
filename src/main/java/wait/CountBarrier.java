@@ -3,7 +3,7 @@ package wait;
 public class CountBarrier {
     private final Object monitor = this;
 
-    private int total;
+    private final int total;
 
     private int count = 0;
 
@@ -16,12 +16,11 @@ public class CountBarrier {
             count++;
             monitor.notifyAll();
         }
-       total++;
     }
 
     public void await() {
         synchronized (monitor) {
-            while (count != total) {
+            while (count < total) {
                 try {
                     monitor.wait();
                 } catch (InterruptedException e) {
