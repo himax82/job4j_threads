@@ -14,11 +14,11 @@ public class User {
         return id;
     }
 
-    public synchronized int getAmount() {
+    public int getAmount() {
         return amount;
     }
 
-    public synchronized void setAmount(int amount) {
+    public void setAmount(int amount) {
         this.amount = amount;
     }
 }

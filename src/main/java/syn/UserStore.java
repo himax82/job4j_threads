@@ -12,31 +12,30 @@ import java.util.Map;
 public class UserStore {
 
     @GuardedBy("this")
-    private final Map<Integer, Integer> users = new HashMap<>();
+    private final Map<Integer, User> users = new HashMap<>();
 
     public synchronized boolean add(User user) {
-       users.put(user.getId(), user.getAmount());
-       return true;
+       return users.putIfAbsent(user.getId(), user) == null;
     }
 
     public synchronized boolean update(User user) {
         if (users.containsKey(user.getId())) {
-            users.put(user.getId(), user.getAmount());
+            users.replace(user.getId(), user);
             return true;
         }
         return false;
     }
 
     public synchronized boolean delete(User user) {
-        return users.remove(user.getId(), user.getAmount());
+        return users.remove(user.getId(), user);
     }
 
     public synchronized boolean transfer(int fromId, int toId, int amount) {
-        int balance = users.get(fromId) - amount;
+        int balance = users.get(fromId).getAmount() - amount;
         if (users.containsKey(fromId) && users.containsKey(toId)) {
             if (balance > 0) {
-                users.put(fromId, balance);
-                users.put(toId, users.get(toId) + amount);
+                users.replace(fromId, new User(fromId, balance));
+                users.replace(toId, new User(toId, users.get(toId).getAmount() + amount));
                 return true;
             }
         }
