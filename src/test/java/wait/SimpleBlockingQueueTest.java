@@ -1,5 +1,6 @@
 package wait;
 
+import org.junit.Ignore;
 import org.junit.Test;
 
 import java.util.ArrayList;
@@ -40,6 +41,7 @@ public class SimpleBlockingQueueTest {
         assertThat(list, is(List.of(1)));
     }
 
+    @Ignore
     @Test
     public void whenFetchAllThenGetIt() throws InterruptedException {
         final CopyOnWriteArrayList<Integer> buffer = new CopyOnWriteArrayList<>();
