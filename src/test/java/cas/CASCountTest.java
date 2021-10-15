@@ -10,7 +10,6 @@ import static org.junit.Assert.*;
 
 public class CASCountTest {
 
-    @Ignore
     @Test
     public void when200incrTwoThreads() {
         CASCount count = new CASCount();
