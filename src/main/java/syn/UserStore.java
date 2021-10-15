@@ -7,23 +7,20 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.concurrent.ConcurrentHashMap;
 
 @ThreadSafe
 public class UserStore {
 
     @GuardedBy("this")
-    private final Map<Integer, User> users = new HashMap<>();
+    private final Map<Integer, User> users = new ConcurrentHashMap<>();
 
     public synchronized boolean add(User user) {
        return users.putIfAbsent(user.getId(), user) == null;
     }
 
     public synchronized boolean update(User user) {
-        if (users.containsKey(user.getId())) {
-            users.replace(user.getId(), user);
-            return true;
-        }
-        return false;
+        return users.replace(user.getId(), user) != null;
     }
 
     public synchronized boolean delete(User user) {
@@ -31,13 +28,15 @@ public class UserStore {
     }
 
     public synchronized boolean transfer(int fromId, int toId, int amount) {
-        int balance = users.get(fromId).getAmount() - amount;
-        if (users.containsKey(fromId) && users.containsKey(toId)) {
-            if (balance > 0) {
-                users.replace(fromId, new User(fromId, balance));
-                users.replace(toId, new User(toId, users.get(toId).getAmount() + amount));
+        User f = users.get(fromId);
+        User t = users.get(toId);
+        int balance = f.getAmount() - amount;
+        if (f != null && t != null && balance > 0) {
+                f.setAmount(balance);
+                t.setAmount(t.getAmount() + amount);
+                users.replace(fromId, f);
+                users.replace(toId, t);
                 return true;
-            }
         }
         return false;
     }
