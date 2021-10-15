@@ -2,6 +2,7 @@ package cas;
 
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
+import java.util.concurrent.atomic.AtomicInteger;
 
 public class Cache {
 
@@ -16,12 +17,12 @@ public class Cache {
     }
 
     public boolean update(Base model) {
-       return memory.computeIfPresent(model.getId(), (k, v) -> {
-            if (memory.get(model.getId()).getVersion() != model.getVersion()) {
+        AtomicInteger ver = new AtomicInteger(model.getVersion());
+        return memory.computeIfPresent(model.getId(), (k, v) -> {
+            if (v.getVersion() != ver.get()) {
                 throw new OptimisticException("Versions are not equal");
             }
-            int ver = model.getVersion();
-            v = new Base(model.getId(), ++ver);
+            v = new Base(model.getId(), ver.getAndIncrement());
             v.setName(model.getName());
            return v;
        }) != null;
