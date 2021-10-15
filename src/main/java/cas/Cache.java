@@ -17,12 +17,13 @@ public class Cache {
     }
 
     public boolean update(Base model) {
-        AtomicInteger ver = new AtomicInteger(model.getVersion());
         return memory.computeIfPresent(model.getId(), (k, v) -> {
-            if (v.getVersion() != ver.get()) {
+            if (v.getVersion() != model.getVersion()) {
                 throw new OptimisticException("Versions are not equal");
             }
-            v = new Base(model.getId(), ver.getAndIncrement());
+            int i = model.getVersion();
+            i++;
+            v = new Base(model.getId(), i);
             v.setName(model.getName());
            return v;
        }) != null;
