@@ -73,6 +73,7 @@ public class SimpleBlockingQueueTest {
         assertThat(buffer, is(Arrays.asList(0, 1, 2, 3, 4)));
     }
 
+    @Ignore
     @Test
     public void whenFetchAllThenGetNoAll() throws InterruptedException {
         final ArrayList<Integer> list = new ArrayList<>();
