@@ -11,20 +11,28 @@ public class SimpleBlockingQueue<T> {
 
     @GuardedBy("this")
     private final Queue<T> queue = new LinkedList<>();
-
-    public synchronized Queue<T> getQueue() {
-        return queue;
-    }
+    private final static int QUEUELENGTH = 10;
+    private int count;
 
     public synchronized void offer(T value) {
-        queue.add(value);
-        this.notifyAll();
+            while (count == QUEUELENGTH) {
+                try {
+                    this.wait();
+                } catch (InterruptedException e) {
+                    e.printStackTrace();
+                }
+            }
+            queue.add(value);
+            count++;
+            this.notify();
     }
 
     public synchronized T poll() throws InterruptedException {
-        while (queue.size() == 0) {
-            this.wait();
+            while (queue.isEmpty()) {
+                    this.wait();
+            }
+            count--;
+            this.notify();
+            return queue.poll();
         }
-        return queue.poll();
     }
-}

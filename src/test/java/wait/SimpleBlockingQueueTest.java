@@ -1,6 +1,5 @@
 package wait;
 
-import org.checkerframework.checker.units.qual.A;
 import org.junit.Test;
 
 import java.util.ArrayList;
@@ -17,6 +16,7 @@ public class SimpleBlockingQueueTest {
     @Test
     public void queueTestAddAndPoll() throws InterruptedException {
         SimpleBlockingQueue<Integer> simple = new SimpleBlockingQueue<>();
+        ArrayList<Integer> list = new ArrayList<>();
         Thread threadOffer = new Thread(
                 () -> {
                         simple.offer(1);
@@ -27,7 +27,7 @@ public class SimpleBlockingQueueTest {
         Thread threadPoll = new Thread(
                 () -> {
                     try {
-                        simple.poll();
+                      list.add(simple.poll());
                     } catch (InterruptedException e) {
                         e.printStackTrace();
                     }
@@ -37,8 +37,7 @@ public class SimpleBlockingQueueTest {
         threadPoll.start();
         threadOffer.join();
         threadPoll.join();
-        ArrayList<Integer> list = new ArrayList<>(simple.getQueue());
-        assertThat(list, is(List.of(2, 3)));
+        assertThat(list, is(List.of(1)));
     }
 
     @Test
@@ -55,7 +54,7 @@ public class SimpleBlockingQueueTest {
         producer.start();
         Thread consumer = new Thread(
                 () -> {
-                    while (!queue.getQueue().isEmpty() || !Thread.currentThread().isInterrupted()) {
+                    while (!Thread.currentThread().isInterrupted()) {
                         try {
                             buffer.add(queue.poll());
                         } catch (InterruptedException e) {
@@ -86,9 +85,11 @@ public class SimpleBlockingQueueTest {
         producer.start();
         Thread consumer = new Thread(
                 () -> {
-                    while (!(queue.getQueue().size() == 1) || !Thread.currentThread().isInterrupted()) {
+                    int i = 0;
+                    while (!(i == 3) || !Thread.currentThread().isInterrupted()) {
                         try {
                             list.add(queue.poll());
+                            i++;
                         } catch (InterruptedException e) {
                             e.printStackTrace();
                             Thread.currentThread().interrupt();
