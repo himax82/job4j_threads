@@ -15,7 +15,7 @@ public class ThreadPool {
         }
     }
 
-    public void work(Runnable job) {
+    public void work(Runnable job) throws InterruptedException {
         tasks.offer(job);
     }
 
