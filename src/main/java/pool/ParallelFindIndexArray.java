@@ -8,22 +8,24 @@ public class ParallelFindIndexArray extends RecursiveTask<Integer> {
 
     private final int[] array;
     private final int value;
-    private final int index;
+    private int start;
+    private int finish;
 
-    public ParallelFindIndexArray(int[] array, int value, int index) {
+    public ParallelFindIndexArray(int[] array, int value, int start, int finish) {
         this.array = array;
         this.value = value;
-        this.index = index;
+        this.start = start;
+        this.finish = finish;
     }
 
     @Override
     protected Integer compute() {
-        if (array.length <= 10) {
-            return searchTen(array);
+        if (finish - start <= 10) {
+            return search();
         }
-        int mid = (array.length) / 2;
-        ParallelFindIndexArray leftSort = new ParallelFindIndexArray(Arrays.copyOfRange(array, 0, mid), value, index);
-        ParallelFindIndexArray rightSort = new ParallelFindIndexArray(Arrays.copyOfRange(array, mid, array.length), value, index + mid);
+        int mid = (finish - start) / 2;
+        ParallelFindIndexArray leftSort = new ParallelFindIndexArray(array, value, start, start + mid);
+        ParallelFindIndexArray rightSort = new ParallelFindIndexArray(array, value, finish - mid, finish);
         leftSort.fork();
         rightSort.fork();
         int i = leftSort.join();
@@ -33,13 +35,13 @@ public class ParallelFindIndexArray extends RecursiveTask<Integer> {
 
     public static int find(int[] array, int value) {
         ForkJoinPool forkJoinPool = new ForkJoinPool();
-        return forkJoinPool.invoke(new ParallelFindIndexArray(array, value, 0));
+        return forkJoinPool.invoke(new ParallelFindIndexArray(array, value, 0, array.length));
     }
 
-    private int searchTen(int[] ar) {
-        for (int i = 0; i < array.length; i++) {
+    private int search() {
+        for (int i = start; i < finish; i++) {
             if (array[i] == (value)) {
-                return i + index;
+                return i;
             }
         }
         return 0;
