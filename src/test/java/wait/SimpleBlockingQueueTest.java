@@ -20,9 +20,13 @@ public class SimpleBlockingQueueTest {
         ArrayList<Integer> list = new ArrayList<>();
         Thread threadOffer = new Thread(
                 () -> {
+                    try {
                         simple.offer(1);
                         simple.offer(2);
                         simple.offer(3);
+                    } catch (InterruptedException e) {
+                        e.printStackTrace();
+                    }
                 }
         );
         Thread threadPoll = new Thread(
@@ -48,9 +52,13 @@ public class SimpleBlockingQueueTest {
         final SimpleBlockingQueue<Integer> queue = new SimpleBlockingQueue<>();
         Thread producer = new Thread(
                 () -> {
-                    IntStream.range(0, 5).forEach(
-                            queue::offer
-                    );
+                    for (int i = 0; i < 5; i++) {
+                        try {
+                            queue.offer(i);
+                        } catch (InterruptedException e) {
+                            e.printStackTrace();
+                        }
+                    }
                 }
         );
         producer.start();
@@ -80,9 +88,13 @@ public class SimpleBlockingQueueTest {
         final SimpleBlockingQueue<Integer> queue = new SimpleBlockingQueue<>();
         Thread producer = new Thread(
                 () -> {
-                    IntStream.range(5, 9).forEach(
-                            queue::offer
-                    );
+                    for (int i = 5; i < 9; i++) {
+                        try {
+                            queue.offer(i);
+                        } catch (InterruptedException e) {
+                            e.printStackTrace();
+                        }
+                    }
                 }
         );
         producer.start();
