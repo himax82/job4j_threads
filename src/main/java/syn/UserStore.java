@@ -27,9 +27,8 @@ public class UserStore {
     public synchronized boolean transfer(int fromId, int toId, int amount) {
         User f = users.get(fromId);
         User t = users.get(toId);
-        int balance = f.getAmount() - amount;
-        if (f != null && t != null && balance >= 0) {
-                f.setAmount(balance);
+        if (f != null && t != null && f.getAmount() >= 0) {
+                f.setAmount(f.getAmount() - amount);
                 t.setAmount(t.getAmount() + amount);
                 users.replace(fromId, f);
                 users.replace(toId, t);
