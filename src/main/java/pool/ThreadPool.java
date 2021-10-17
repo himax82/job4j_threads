@@ -4,6 +4,9 @@ import wait.SimpleBlockingQueue;
 
 import java.util.LinkedList;
 import java.util.List;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
+import java.util.concurrent.TransferQueue;
 
 public class ThreadPool {
     private final List<Thread> threads = new LinkedList<>();
@@ -19,6 +22,17 @@ public class ThreadPool {
         tasks.offer(job);
     }
 
+    public void run() throws InterruptedException {
+        while (!tasks.isEmpty()) {
+            for (Thread t : threads) {
+                if (t.getState() == Thread.State.TERMINATED || t.getState() == Thread.State.NEW) {
+                    t = new Thread(tasks.poll());
+                    t.start();
+                }
+            }
+        }
+    }
+
     public void shutdown() {
         for (Thread t : threads) {
             t.interrupt();
@@ -29,16 +43,8 @@ public class ThreadPool {
         ThreadPool threadPool = new ThreadPool();
         for (int i = 1; i <= 100; i++) {
             int finalI = i;
-            threadPool.tasks.offer(() -> System.out.println("Задача № " + finalI));
+            threadPool.work(() -> System.out.println("Задача № " + finalI));
         }
-        while (!threadPool.tasks.isEmpty()) {
-            for (Thread t : threadPool.threads) {
-                if (t.getState() == Thread.State.TERMINATED || t.getState() == Thread.State.NEW) {
-                    t = new Thread(threadPool.tasks.poll());
-                    t.start();
-                }
-            }
-        }
-        threadPool.shutdown();
+        threadPool.run();
     }
 }
