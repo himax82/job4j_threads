@@ -30,8 +30,6 @@ public class UserStore {
         if (f != null && t != null && f.getAmount() >= 0) {
                 f.setAmount(f.getAmount() - amount);
                 t.setAmount(t.getAmount() + amount);
-                users.replace(fromId, f);
-                users.replace(toId, t);
                 return true;
         }
         return false;
