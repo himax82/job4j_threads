@@ -24,13 +24,13 @@ public class ParallelFindIndexArray extends RecursiveTask<Integer> {
             return search();
         }
         int mid = (finish - start) / 2;
-        ParallelFindIndexArray leftSort = new ParallelFindIndexArray(array, value, start, start + mid);
-        ParallelFindIndexArray rightSort = new ParallelFindIndexArray(array, value, finish - mid, finish);
+        ParallelFindIndexArray leftSort = new ParallelFindIndexArray(array, value, start, mid);
+        ParallelFindIndexArray rightSort = new ParallelFindIndexArray(array, value, mid + 1, finish);
         leftSort.fork();
         rightSort.fork();
         int i = leftSort.join();
         int j = rightSort.join();
-        return i + j;
+        return Math.max(i, j);
     }
 
     public static int find(int[] array, int value) {
@@ -39,11 +39,11 @@ public class ParallelFindIndexArray extends RecursiveTask<Integer> {
     }
 
     private int search() {
-        for (int i = start; i < finish; i++) {
+        for (int i = start; i <= finish; i++) {
             if (array[i] == (value)) {
                 return i;
             }
         }
-        return 0;
+        return -1;
     }
 }
