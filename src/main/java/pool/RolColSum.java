@@ -48,30 +48,36 @@ public class RolColSum {
 
     public static Sums[] asyncSum(int[][] matrix) throws ExecutionException, InterruptedException {
         Sums[] all = new Sums[matrix.length];
-        Sums[] getCol = getCol(matrix).get();
+        Sums[] getOdd = getOdd(matrix).get();
         int rowSum = 0;
-        for (int i = 0; i < matrix.length; i++) {
+        int colSum = 0;
+        for (int i = 0; i < matrix.length; i += 2) {
             for (int j = 0; j < matrix.length; j++) {
                 rowSum += matrix[i][j];
+                colSum += matrix[j][i];
             }
-            all[i] = new Sums(rowSum, 0);
+            all[i] = new Sums(rowSum, colSum);
             rowSum = 0;
+            colSum = 0;
         }
-        for (int i = 0; i < matrix.length; i++) {
-            all[i].setColSum(getCol[i].getColSum());
+        for (int i = 1; i < matrix.length; i += 2) {
+            all[i] = getOdd[i];
         }
         return all;
     }
 
-    public static CompletableFuture<Sums[]> getCol(int[][] data) {
+    public static CompletableFuture<Sums[]> getOdd(int[][] data) {
         return CompletableFuture.supplyAsync(() -> {
             Sums[] sums = new Sums[data.length];
+            int rowSum = 0;
             int colSum = 0;
-            for (int i = 0; i < data.length; i++) {
+            for (int i = 1; i < data.length; i += 2) {
                 for (int j = 0; j < data.length; j++) {
+                    rowSum += data[i][j];
                     colSum += data[j][i];
                 }
-                sums[i] = new Sums(0, colSum);
+                sums[i] = new Sums(rowSum, colSum);
+                rowSum = 0;
                 colSum = 0;
             }
             return sums;
@@ -79,9 +85,9 @@ public class RolColSum {
     }
 
     public static void main(String[] args) throws ExecutionException, InterruptedException {
-        int[][] ar = new int[10000][10000];
-        for (int i = 0; i < 10000; i++) {
-            for (int j = 0; j < 10000; j++) {
+        int[][] ar = new int[20000][20000];
+        for (int i = 0; i < 20000; i++) {
+            for (int j = 0; j < 20000; j++) {
                 ar[i][j] = (int) (Math.random() * 1000000);
             }
         }
