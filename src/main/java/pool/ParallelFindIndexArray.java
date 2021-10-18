@@ -23,7 +23,7 @@ public class ParallelFindIndexArray extends RecursiveTask<Integer> {
         if (finish - start <= 10) {
             return search();
         }
-        int mid = (finish - start) / 2;
+        int mid = (finish + start) / 2;
         ParallelFindIndexArray leftSort = new ParallelFindIndexArray(array, value, start, mid);
         ParallelFindIndexArray rightSort = new ParallelFindIndexArray(array, value, mid + 1, finish);
         leftSort.fork();
@@ -35,7 +35,7 @@ public class ParallelFindIndexArray extends RecursiveTask<Integer> {
 
     public static int find(int[] array, int value) {
         ForkJoinPool forkJoinPool = new ForkJoinPool();
-        return forkJoinPool.invoke(new ParallelFindIndexArray(array, value, 0, array.length));
+        return forkJoinPool.invoke(new ParallelFindIndexArray(array, value, 0, array.length - 1));
     }
 
     private int search() {
