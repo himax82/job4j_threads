@@ -3,11 +3,11 @@ package linked;
 public final class Node<T> {
 
     private final Node<T> next;
-    private final T value;
+    private final T val;
 
     public Node(Node<T> next, T value) {
         this.next = next;
-        this.value = value;
+        this.val = value;
     }
 
     public Node<T> getNext() {
@@ -15,12 +15,12 @@ public final class Node<T> {
     }
 
     public Node<T> setNext(final Node<T> next) {
-        Node<T> node = new Node<>(next, value);
+        Node<T> node = new Node<>(next, val);
         return next;
     }
 
     public T getValue() {
-        return value;
+        return val;
     }
 
     public Node<T> setValue(T value) {
