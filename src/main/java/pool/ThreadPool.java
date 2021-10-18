@@ -8,8 +8,9 @@ import java.util.List;
 public class ThreadPool {
     private final List<Thread> threads = new LinkedList<>();
     private final SimpleBlockingQueue<Runnable> tasks = new SimpleBlockingQueue<>();
+    private final int size = Runtime.getRuntime().availableProcessors();
 
-    public ThreadPool(int size) {
+    public ThreadPool() {
         for (int i = 0; i < size; i++) {
             Thread thread = new Thread(
                     () -> {
@@ -34,14 +35,6 @@ public class ThreadPool {
     public void shutdown() {
         for (Thread t : threads) {
             t.interrupt();
-        }
-    }
-
-    public static void main(String[] args) throws InterruptedException {
-        ThreadPool threadPool = new ThreadPool(Runtime.getRuntime().availableProcessors());
-        for (int i = 1; i <= 100; i++) {
-            int finalI = i;
-            threadPool.work(() -> System.out.println("Задача № " + finalI));
         }
     }
 }
