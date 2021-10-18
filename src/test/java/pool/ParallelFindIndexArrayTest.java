@@ -1,5 +1,6 @@
 package pool;
 
+import org.junit.Ignore;
 import org.junit.Test;
 
 import java.util.concurrent.ForkJoinPool;
@@ -9,6 +10,7 @@ import static org.junit.Assert.*;
 
 public class ParallelFindIndexArrayTest {
 
+    @Ignore
     @Test
     public void whenSearchIndexSize40() {
         int[] ar = new int[40];
