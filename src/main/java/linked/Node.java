@@ -2,16 +2,16 @@ package linked;
 
 public final class Node<T> {
 
-    private final Node<T> next;
+    private final Node<T> tNode;
     private final T val;
 
     public Node(Node<T> next, T value) {
-        this.next = next;
+        this.tNode = next;
         this.val = value;
     }
 
     public Node<T> getNext() {
-        return next;
+        return tNode;
     }
 
     public Node<T> setNext(final Node<T> next) {
@@ -24,7 +24,7 @@ public final class Node<T> {
     }
 
     public Node<T> setValue(T value) {
-        Node<T> node = new Node<>(next, value);
+        Node<T> node = new Node<>(tNode, value);
         return node;
     }
 }
