@@ -42,7 +42,7 @@ public class EmailNotification {
 
     public static void main(String[] args) {
         EmailNotification emailNotification = new EmailNotification();
-        User user = new User("max", "max@mail.com");
+        User user = new User("hi_max", "max@mail.com");
         emailNotification.emailTo(user);
         emailNotification.close();
     }
